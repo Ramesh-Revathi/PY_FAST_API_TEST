@@ -1,0 +1,32 @@
+graph TD
+  A[Client] -->|POST /register| B[Register API]
+  B --> C[Create User]
+  C --> D[DB: users]
+  B --> E[Return RegisterResponse]
+
+  A -->|POST /request-otp| F[Request OTP API]
+  F --> G[Find User]
+  G --> D
+  F --> H[Generate OTP]
+  H --> I[DB: otp_codes]
+  F --> J[Return OTPResponse]
+
+  A -->|POST /login| K[Login API]
+  K --> L[Find User]
+  L --> D
+  K --> M[Validate OTP]
+  M --> I
+  K --> N[Mark OTP Used]
+  N --> I
+  K --> O[Generate JWT Token]
+  K --> P[Return TokenResponse]
+
+  A -->|GET /me| Q[Me API]
+  Q --> R[Validate JWT Token]
+  R --> D
+  Q --> S[Return UserResponse]
+
+  subgraph DB
+    D
+    I
+  end
